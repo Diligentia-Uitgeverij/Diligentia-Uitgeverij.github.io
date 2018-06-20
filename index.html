@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.0/normalize.css">
+    <link rel="stylesheet" href="lib/style.css">
+    <link rel="stylesheet" href="lib/helpers.css">
+    <link rel="stylesheet" href="lib/introjs.min.css">
+    <title>PageGuide</title>
+  </head>
+
+  <body>
+    <main class="z-depth-3">
+      <aside class="z-depth-1">
+        <menu >
+          <menuitem class="z-depth-1"><a href="#links">Links</a></menuitem>
+          <menuitem class="z-depth-1"><a href="#introduction">Introduction</a></menuitem>
+          <menuitem class="z-depth-1"><a href="#basic-usage">Basic usage</a></menuitem>
+          <menuitem class="z-depth-1"><a href="#position">Position</a></menuitem>
+          <menuitem class="z-depth-1"><a href="#shapes">Shapes</a></menuitem>
+          <menuitem class="z-depth-1"><a href="#targets">Targets</a></menuitem>
+          <menuitem class="z-depth-1"><a href="#issues">Issues</a></menuitem>
+        </menu>
+      </aside>
+      <div class="main z-depth-1">
+        <header class="z-depth-1">
+          <h1 id="top">PageGuide By Diligentia-Uitgeverij</h1>
+          <button class="btn-start start-guide" class="z-depth-3">?</button>
+          <button class="btn-start btn-start-intro" class="z-depth-3">i</button>
+        </header>
+        <div class="container">
+          <article id="links" class="z-depth-1">
+            <p>
+              <a href="https://github.com/Diligentia-Uitgeverij/pageguide">Github</a>
+              <a href="https://www.npmjs.com/package/pageguide">NPM</a>
+              <a href="https://github.com/Diligentia-Uitgeverij/pageguide/tree/fce309ae6c0b1ee1d1d5299fe908eac82a004916/doc">Documentation</a>
+            </p>
+            </menu> 
+          </article>
+          <article id="introduction" class="z-depth-1">
+            <h2 class="title">Why did we create another library?</h2>
+            <p class="lead">There are loads of libraries that are dedicated to highlight certain elements in a page, and adding a popup next to this element. Why would we need to create another?</p>
+            <p>Our applications are all quite heavy HTML-wise, with containers having z-indexes and elements within these containers also can have their z-indexes defined. This means that you can't set a target's z-index to <code>9999999</code>, and expect it to come on top of the application.<br>
+              For instance hit the <button class="btn-start btn-start-intro inline" class="z-depth-3">i</button> button to start a guide with <a href="https://introjs.com/">intro.js</a><br>
+            Because z-indexes are a mystical behaviour for most, here is a nice article that explains this behaviour. <a href="https://www.telerik.com/blogs/z-index-demystified">Z-index demystified</a>.</p>
+            <p>So how did we fix this problem in our own library? By adding a canvas on top of the entire application. On this canvas we draw the backdrop, and then we mask out the targets.</p>
+            <p>This ensures that the element is highlighted, even on z-index-heavy applications. And it has some other improvements to the more classic libraries. For instance, highlighting multiple targets is now easily possible, they just have to fit in the viewport.</p>
+            <p>You can start the guide by clicking on the button in the header, or by clicking this button right here: <button class="btn-start inline start-guide">?</button></p>
+          </article>
+          <article id="basic-usage" class="z-depth-1">
+            <h2 class="title">Basic usage</h2>
+            <p class="lead">There are a couple of different ways to get started. But in the most basic way, simply include the script on your page, and add the following code.</p>
+            <pre>var guideElements = [
+  {
+    title: 'A title',
+    content: 'Content is the only required field.',
+    element: '#target',
+    postion: 'bottom',
+    shape: 'rect',
+  },
+];
+
+var pageGuide = new PageGuide.PageGuide(guideElements, false);
+var btnStart = document.getElementById('btn-start');
+
+btnStart.onclick = function() {
+  pageGuide.start();
+};</pre>
+            <p>A GuideElement is defined as follows:
+              <table>
+                <tr>
+                  <td><code>content</code></td>
+                  <td><code>string</code></td>
+                  <td><strong>REQUIRED</strong></td>
+                  <td>Content of the popup, can be any HTML, or just a simple string.</td>
+                </tr>
+                <tr>
+                  <td><code>title</code></td>
+                  <td><code>string</code></td>
+                  <td><strong>OPTIONAL</strong></td>
+                  <td>The title of the popup.</td>
+                </tr>
+                <tr>
+                  <td><code>element</code></td>
+                  <td><code>string</code></td>
+                  <td><strong>OPTIONAL</strong></td>
+                  <td>
+                    a querySelector, will be used as <code>document.querySelector(guideElement.element);</code>. If the querySelector is defined, but yields no result, the popup will be ignored.<br>
+                    If you don't supply an element, th epopup will simply be centered on the page.
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>position</code></td>
+                  <td><code>string</code></td>
+                  <td><strong>OPTIONAL</strong></td>
+                  <td>Pick the position of the popup relative to the first target. Options are: <ul>
+                    <li><code>top</code></li>
+                    <li><code>right</code></li>
+                    <li><code>bottom</code></li>
+                    <li><code>left</code></li>
+                  </ul></td>
+                </tr>
+                <tr>
+                  <td><code>shape</code></td>
+                  <td><code>string</code></td>
+                  <td><strong>OPTIONAL</strong></td>
+                  <td>pick a shape to highlight with. Options are: <ul>
+                      <li><code>rect</code></li>
+                      <li><code>rounded_rect</code></li>
+                      <li><code>circle</code></li>
+                      <li><code>ellipse</code></li>
+                    </ul></td>
+                </tr>
+              </table>
+            </p>
+          </article>
+          <article id="position" class="z-depth-1">
+            <h2 class="title">Position</h2>
+            <p class="lead">For the positioning of the popup we use the brilliant library <a href="https://popper.js.org/">Popper.js</a>.</p>
+            <p>You can only specify the direction where you want the popup to be, Popper will reposition when necessary.</p>
+          </article>
+          <article id="shapes" class="z-depth-1">
+            <h2 class="title">Shapes</h2>
+            <p class="lead">This is one of the biggest advantages of using a canvas, we can easily define a shape to use as mask. For now we are limited to using a rectangle, a rounded rectangle, a circle, or an ellipse.</p>
+            <p>Would you like to add another shape? Feel free to open a pull-request on <a href="https://github.com/Diligentia-Uitgeverij/pageguide/pulls">Github</a>.</p>
+          </article>
+          <article id="targets" class="z-depth-1">
+            <h2 class="title">Multiple targets</h2>
+            <p class="lead">You can target multiple elements in a single popup. The popup will position itself around the first found element.</p>
+            <p>To target a single element, give it an <code>id</code> on the page and supply the id as follows in your list: <code>#id-of-the-target</code>.<br>
+            If you're targeting multiple elements, simply define the correct querySelector in your list. For instance: <code>.common-class-of-the-targets</code> or you could even target all elements in a list: <code>ul.nav > li</code>, ...</p>
+            <p>To check if you're providing the correct querySelector, you could simply open the console and try your selector live on your page: <code>document.querySelector(guideElement.element)</code></p>
+          </article>
+          <article id="issues" class="z-depth-1">
+            <h2 class="title">Issues</h2>
+            <p class="lead">If you found some issues, please notfiy us at <a href="https://github.com/Diligentia-Uitgeverij/pageguide/issues">Github Issues</a>.</p>
+          </article>
+        </div>
+      </div>
+    </main>
+
+    <script src="lib/intro.min.js"></script>
+    <script src="lib/pageguide.js"></script>
+
+    <script src="lib/script.js"></script>
+  </body>
+</html>
